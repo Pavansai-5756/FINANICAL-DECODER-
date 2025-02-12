@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Financial Decoder</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://apis.google.com/js/api.js"></script>
+    <script src="js/config.js" defer></script>
+    <script src="js/app.js" defer></script>
+</head>
+<body>
+    <div class="grid-pattern"></div>
+    <header>
+        <nav>
+            <div class="logo">
+                <img src="assets/logo.svg" alt="AI Financial Decoder">
+                <span>AI Financial Decoder</span>
+            </div>
+            <ul>
+                <li><a href="#home" class="active">Home</a></li>
+                <li><a href="#analysis">Analysis</a></li>
+                <li><a href="#decoder">Decoder</a></li>
+                <li><a href="#history">History</a></li>
+                
+            </ul>
+        </nav>
+        <button id="theme-toggle">Dark Mode</button>
+    </header>
+
+    <main>
+        <section id="hero">
+            <h1>AI-Powered Financial Analysis</h1>
+            <p>Powered by Google's Gemini Pro</p>
+        </section>
+
+        <section id="analysis" style="display: none;">
+            <div class="analysis-container">
+                <h2>Financial Analysis Tools</h2>
+                
+                <div class="analysis-categories">
+                    <div class="category-card" onclick="setAnalysisQuery('market')">
+                        <div class="card-image">
+                            <img src="assets/images/market-analysis.svg" alt="Market Analysis">
+                        </div>
+                        <h3>Market Analysis</h3>
+                        <ul>
+                            <li>Technical Analysis</li>
+                            <li>Market Trends</li>
+                            <li>Volume Analysis</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="category-card" onclick="setAnalysisQuery('fundamental')">
+                        <div class="card-image">
+                            <img src="assets/images/fundamental.svg" alt="Fundamental Analysis">
+                        </div>
+                        <h3>Fundamental Analysis</h3>
+                        <ul>
+                            <li>Financial Ratios</li>
+                            <li>Company Valuations</li>
+                            <li>Economic Indicators</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="category-card" onclick="setAnalysisQuery('risk')">
+                        <div class="card-image">
+                            <img src="assets/images/risk.svg" alt="Risk Assessment">
+                        </div>
+                        <h3>Risk Assessment</h3>
+                        <ul>
+                            <li>Risk Metrics</li>
+                            <li>Portfolio Risk</li>
+                            <li>Market Risk</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="category-card" onclick="setAnalysisQuery('strategy')">
+                        <div class="card-image">
+                            <img src="assets/images/strategy.svg" alt="Investment Strategies">
+                        </div>
+                        <h3>Investment Strategies</h3>
+                        <ul>
+                            <li>Portfolio Management</li>
+                            <li>Asset Allocation</li>
+                            <li>Investment Planning</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="quick-analysis">
+                    <h3>Quick Analysis Templates</h3>
+                    <div class="template-buttons">
+                        <button onclick="analyzeTemplate('stock')">Stock Analysis</button>
+                        <button onclick="analyzeTemplate('portfolio')">Portfolio Review</button>
+                        <button onclick="analyzeTemplate('trend')">Market Trend</button>
+                        <button onclick="analyzeTemplate('risk')">Risk Assessment</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="query-section">
+            <div class="query-container">
+                <textarea id="userQuery" 
+                    placeholder="Ask anything about finance, e.g., 'Explain what a bull market is' or 'Analyze the concept of compound interest'"></textarea>
+                <button onclick="getAIResponse()" id="analyzeBtn">
+                    <span class="button-text">Analyze</span>
+                    <div class="loader" style="display: none;"></div>
+                </button>
+            </div>
+        </section>
+
+        <section id="response-section">
+            <div id="aiResponse"></div>
+        </section>
+
+        <section id="decoder" style="display: none;">
+            <div class="decoder-container">
+                <div class="decoder-search">
+                    <input type="text" id="termSearch" placeholder="Search financial terms...">
+                </div>
+                <div class="terms-grid">
+                    <div class="term-card" data-category="stocks">
+                        <h3>Bull Market</h3>
+                        <p>A financial market condition in which prices are rising or expected to rise.</p>
+                        <span class="category">Stocks</span>
+                    </div>
+                    <div class="term-card" data-category="investment">
+                        <h3>Compound Interest</h3>
+                        <p>Interest calculated on both the initial principal and accumulated interest.</p>
+                        <span class="category">Investment</span>
+                    </div>
+                    <div class="term-card" data-category="trading">
+                        <h3>Day Trading</h3>
+                        <p>Buying and selling financial instruments within the same trading day.</p>
+                        <span class="category">Trading</span>
+                    </div>
+                    <div class="term-card" data-category="bonds">
+                        <h3>Bond Yield</h3>
+                        <p>The return an investor realizes on a bond investment.</p>
+                        <span class="category">Bonds</span>
+                    </div>
+                    <div class="term-card" data-category="stocks">
+                        <h3>Bear Market</h3>
+                        <p>A market condition in which prices are falling, encouraging selling.</p>
+                        <span class="category">Stocks</span>
+                    </div>
+                    <div class="term-card" data-category="investment">
+                        <h3>Diversification</h3>
+                        <p>Spreading investments across various financial instruments to reduce risk.</p>
+                        <span class="category">Investment</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="history" style="display: none;">
+            <div class="history-container">
+                <h2>Analysis History</h2>
+                <div class="history-controls">
+                    <button onclick="clearHistory()" class="clear-history">Clear History</button>
+                    <select id="historyFilter" onchange="filterHistory()">
+                        <option value="all">All Analyses</option>
+                        <option value="market">Market Analysis</option>
+                        <option value="fundamental">Fundamental Analysis</option>
+                        <option value="risk">Risk Assessment</option>
+                        <option value="strategy">Investment Strategy</option>
+                    </select>
+                </div>
+                <div class="history-list">
+                    <!-- History items will be dynamically inserted here -->
+                </div>
+            </div>
+        </section>
+
+        <section id="features">
+            <h2>Key Features</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h3>Financial Term Analysis</h3>
+                    <p>Deep dive into complex financial concepts</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Market Insights</h3>
+                    <p>Understanding market terminology</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Investment Concepts</h3>
+                    <p>Learn about investment strategies</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Risk Analysis</h3>
+                    <p>Understand financial risks</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>About</h4>
+                <p>AI-powered financial analysis tool using Google's Gemini Pro</p>
+            </div>
+            <div class="footer-section">
+                <h4>Contact</h4>
+                <p>Email: support@financialdecoder.ai</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 AI Financial Decoder. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <div class="particles">
+        <script>
+            // Create floating particles
+            function createParticles() {
+                const particles = document.querySelector('.particles');
+                for (let i = 0; i < 50; i++) {
+                    const particle = document.createElement('div');
+                    particle.className = 'particle';
+                    particle.style.width = Math.random() * 10 + 'px';
+                    particle.style.height = particle.style.width;
+                    particle.style.left = Math.random() * 100 + 'vw';
+                    particle.style.top = Math.random() * 100 + 'vh';
+                    particle.style.animationDelay = Math.random() * 20 + 's';
+                    particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                    particles.appendChild(particle);
+                }
+            }
+            createParticles();
+        </script>
+    </div>
+
+    <div class="wave-background">
+        <div class="wave"></div>
+        <div class="wave"></div>
+    </div>
+</body>
+</html> 
